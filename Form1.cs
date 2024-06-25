@@ -18,6 +18,7 @@ namespace SummerPractice
         Point center;
         int scale = 20;
         double gap = 0.5;
+        double xAbs = 0;
         public Form1()
         {
             InitializeComponent();
@@ -67,45 +68,50 @@ namespace SummerPractice
         {
             List<Point> points = new List<Point>();
             string func = input.Text;
-            int count = center.X / scale;
-            for (double x = -count; x <= count; x += gap)
+            for (double x = -xAbs; x <= xAbs; x += gap)
             {
-                string expr = func.Replace("x", "(" + x.ToString() + ")");
-                expr = expr.Replace(",", ".");
-                double result = 0;
-                try
-                {
-                    result = Convert.ToDouble(new DataTable().Compute(expr, ""));
-                }
-                catch (DivideByZeroException ex){
-                    result = double.NegativeInfinity;
-                }
+                double result = calculatePoint(func, x);
                 points.Add(new Point(center.X + (int)(x * scale), center.Y - (int)(result * scale)));
             }
             return points;
         }
 
+        private double calculatePoint(string func, double x)
+        {
+            string expr = func.Replace("x", "(" + x.ToString() + ")");
+            expr = expr.Replace(",", ".");
+            double result = 0;
+            try
+            {
+                result = Convert.ToDouble(new DataTable().Compute(expr, ""));
+            }
+            catch (DivideByZeroException ex)
+            {
+                result = double.NegativeInfinity;
+            }
+            return result;
+        }
+
         private void showResult()
         {
             List<Point> points = calculateFunction();
-            int cnt = 0;
-            foreach (var point in points)
-            {
-                cnt ++;
-                if (point.Y < 0)
-                {
-                    continue;
-                }
-                drawPoint(point);
-            }
 
-            for (int i = 1; i < points.Count; i++)
+            for (int i = 0; i < points.Count; i++)
             {
-                if (points[i].Y < 0 || points[i-1].Y < 0)
+                if(points[i].Y < 0 || points[i].X < 0 || points[i].Y > this.Height || points[i].X > this.Width)
                 {
                     continue;
                 }
-                g.DrawLine(Pens.Aqua, points[i - 1], points[i]);
+                drawPoint(points[i]);
+
+                if (i > 0)
+                {
+                    if (points[i - 1].Y < 0)
+                    {
+                        continue;
+                    }
+                    g.DrawLine(Pens.Aqua, points[i - 1], points[i]);
+                }
             }
         }
 
@@ -115,14 +121,38 @@ namespace SummerPractice
             g.FillEllipse(Brushes.Red, point.X-2, point.Y-2, 4, 4);
         }
 
+        private bool parseInput()
+        {
+            int res;
+            double dbres;
+            if (!Int32.TryParse(scaleTextBox.Text, out scale))
+            {
+                return false;
+            }
+            if (!double.TryParse(gapTextBox.Text, out gap))
+            {
+                return false;
+            }
+            if (!double.TryParse(xAbsTextBox.Text, out xAbs))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private void paintButton_Click(object sender, EventArgs e)
         {
             g = CreateGraphics();
             g.Clear(DefaultBackColor);
             center = new Point(this.Width / 2, this.Height / 2);
-            drawXLine();
-            drawYLine();
-            showResult();
+            if (parseInput())
+            {
+                drawXLine();
+                drawYLine();
+                showResult();
+            }
         }
+
     }
 }
