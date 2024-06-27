@@ -78,18 +78,22 @@ namespace SummerPractice
 
         private double calculatePoint(string func, double x)
         {
-            string expr = func.Replace("x", "(" + x.ToString() + ")");
+            string xValue = String.Format("{0:F20}", x);
+            string expr = func.Replace("x", xValue);
             expr = expr.Replace(",", ".");
             double result = 0;
             try
             {
-                result = Convert.ToDouble(new DataTable().Compute(expr, ""));
+                //result = Convert.ToDouble(new DataTable().Compute(expr, ""));
             }
             catch (DivideByZeroException ex)
             {
-                result = double.NegativeInfinity;
+                //result = double.NegativeInfinity;
             }
-            return result;
+
+            double res = StringToFormula.Eval(expr);
+
+            return res;
         }
 
         private void showResult()
@@ -98,7 +102,7 @@ namespace SummerPractice
 
             for (int i = 0; i < points.Count; i++)
             {
-                if(points[i].Y < 0 || points[i].X < 0 || points[i].Y > this.Height || points[i].X > this.Width)
+                if(checkPointInBounds(points[i]) == false)
                 {
                     continue;
                 }
@@ -106,7 +110,7 @@ namespace SummerPractice
 
                 if (i > 0)
                 {
-                    if (points[i - 1].Y < 0)
+                    if (checkPointInBounds(points[i-1]) == false)
                     {
                         continue;
                     }
@@ -115,16 +119,22 @@ namespace SummerPractice
             }
         }
 
+        private bool checkPointInBounds(Point point)
+        {
+            if (point.Y < 0 || point.X < 0 || point.Y > this.Height || point.X > this.Width)
+            {
+                return false;
+            }
+            return true;
+        }
+
         private void drawPoint(Point point)
         {
-            if (point.Y < 0) { return; }
             g.FillEllipse(Brushes.Red, point.X-2, point.Y-2, 4, 4);
         }
 
         private bool parseInput()
         {
-            int res;
-            double dbres;
             if (!Int32.TryParse(scaleTextBox.Text, out scale))
             {
                 return false;
