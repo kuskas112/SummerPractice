@@ -4,19 +4,27 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SummerPractice
 {
     public static class StringToFormula
     {
-        private static readonly string[] operators = { "+", "-", "/", "%", "*", "^" };
+        private static readonly string[] operators = { "+", "-", "/", "%", "*", "^"};
+        private static readonly string[] functions = {"sin", "cos", "tan", "cot"};
         private static readonly Func<double, double, double>[] operations = {
         (a1, a2) => a1 + a2,
         (a1, a2) => a1 - a2,
         (a1, a2) => a1 / a2,
         (a1, a2) => a1 % a2,
         (a1, a2) => a1 * a2,
-        (a1, a2) => Math.Pow(a1, a2)
+        (a1, a2) => Math.Pow(a1, a2),
+    };
+        private static readonly Func<double, double>[] trigonometryOperations = {
+        (a1) => Math.Sin(a1),
+        (a1) => Math.Cos(a1),
+        (a1) => Math.Tan(a1),
+        (a1) => Math.Cos(a1) / Math.Sin(a1),
     };
 
         public static bool TryEval(string expression, out double value)
@@ -38,7 +46,7 @@ namespace SummerPractice
             if (string.IsNullOrEmpty(expression))
                 return 0.0;
 
-            if (double.TryParse(expression, NumberStyles.Any, CultureInfo.InvariantCulture, out double value))
+            if (double.TryParse(expression, out double value))
                 return value;
 
             List<string> tokens = GetTokens(expression);
@@ -62,6 +70,32 @@ namespace SummerPractice
                         }
                     case ")":
                         throw new ArgumentException("Mis-matched parentheses in expression");
+
+                    case "sin":
+                    case "cos":
+                    case "tan":
+                    case "cot":
+                        if (nextToken == "(")
+                        {
+                            int newIndex = tokenIndex + 1;
+                            string subExpr = GetSubExpression(tokens, ref newIndex);
+                            double computedValue = trigonometryOperations[Array.IndexOf(functions, token)](Eval(subExpr));
+                            operandStack.Push(computedValue);
+                            tokenIndex = newIndex;
+                        }
+                        else
+                        {
+                            string computableNumber = nextToken;
+                            if (nextToken == "-")
+                            {
+                                computableNumber += tokens[tokenIndex + 2];
+                                tokenIndex++;
+                            }
+                            double computedValue = trigonometryOperations[Array.IndexOf(functions, token)](double.Parse($"{computableNumber}", CultureInfo.InvariantCulture));
+                            operandStack.Push(computedValue);
+                            tokenIndex += 2;
+                        }
+                        continue;
 
                     // Handle unary ops
                     case "-":
@@ -136,11 +170,6 @@ namespace SummerPractice
 
             bool ResolveOperation()
             {
-                if (operandStack.Count < 2)
-                {
-                    return false;
-                }
-
                 string op = operatorStack.Pop();
                 double rhs = operandStack.Pop();
                 double lhs = operandStack.Pop();
@@ -179,11 +208,19 @@ namespace SummerPractice
         private static List<string> GetTokens(string expression)
         {
             string operators = "()^*/%+-";
+            string digits = "0123456789.,";
+            string[] funcs = { 
+                "sin",
+                "cos",
+                "tan",
+                "cot"
+            };
             List<string> tokens = new List<string>();
             StringBuilder sb = new StringBuilder();
-
-            foreach (char c in expression.Replace(" ", string.Empty))
+            expression = expression.Replace(" ", string.Empty);
+            for(int i = 0; i < expression.Length; i++)
             {
+                char c = expression[i];
                 if (operators.IndexOf(c) >= 0)
                 {
                     if ((sb.Length > 0))
@@ -193,7 +230,20 @@ namespace SummerPractice
                     }
                     tokens.Add(c.ToString());
                 }
-                else
+                else if(digits.IndexOf(c) == -1 && i+2 < expression.Length)
+                {
+                    string func = expression.Substring(i, 3);
+                    if(Array.IndexOf(funcs, func) >= 0) //got func
+                    {
+                        if ((sb.Length > 0))
+                        {
+                            tokens.Add(sb.ToString());
+                            sb.Length = 0;
+                        }
+                        tokens.Add(func);
+                    }
+                }
+                else if (digits.IndexOf(c) >= 0)
                 {
                     sb.Append(c);
                 }

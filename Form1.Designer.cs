@@ -72,7 +72,7 @@
             this.gapTextBox.Name = "gapTextBox";
             this.gapTextBox.Size = new System.Drawing.Size(64, 26);
             this.gapTextBox.TabIndex = 3;
-            this.gapTextBox.Text = "1";
+            this.gapTextBox.Text = "0,5";
             // 
             // gapLabel
             // 
@@ -115,7 +115,7 @@
             this.scaleTextBox.Name = "scaleTextBox";
             this.scaleTextBox.Size = new System.Drawing.Size(64, 26);
             this.scaleTextBox.TabIndex = 8;
-            this.scaleTextBox.Text = "20";
+            this.scaleTextBox.Text = "10";
             // 
             // Form1
             // 

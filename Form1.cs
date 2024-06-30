@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Linq.Expressions;
 using System.Diagnostics;
+using System.Xml.Schema;
 
 namespace SummerPractice
 {
@@ -78,19 +79,9 @@ namespace SummerPractice
 
         private double calculatePoint(string func, double x)
         {
-            string xValue = String.Format("{0:F20}", x);
+            string xValue = String.Format("{0:F10}", x);
             string expr = func.Replace("x", xValue);
             expr = expr.Replace(",", ".");
-            double result = 0;
-            try
-            {
-                //result = Convert.ToDouble(new DataTable().Compute(expr, ""));
-            }
-            catch (DivideByZeroException ex)
-            {
-                //result = double.NegativeInfinity;
-            }
-
             double res = StringToFormula.Eval(expr);
 
             return res;
@@ -121,7 +112,7 @@ namespace SummerPractice
 
         private bool checkPointInBounds(Point point)
         {
-            if (point.Y < 0 || point.X < 0 || point.Y > this.Height || point.X > this.Width)
+            if (Math.Abs(this.Width - point.X) > this.Width*2 || Math.Abs(this.Height - point.Y) > this.Height*2)
             {
                 return false;
             }
