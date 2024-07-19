@@ -34,18 +34,25 @@
             this.gapTextBox = new System.Windows.Forms.TextBox();
             this.gapLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.xAbsTextBox = new System.Windows.Forms.TextBox();
+            this.xFromTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.scaleTextBox = new System.Windows.Forms.TextBox();
+            this.errorLabel = new System.Windows.Forms.Label();
+            this.xToTextBox = new System.Windows.Forms.TextBox();
+            this.yFromTextBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.xValueTextBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // paintButton
             // 
             this.paintButton.Location = new System.Drawing.Point(12, 241);
             this.paintButton.Name = "paintButton";
-            this.paintButton.Size = new System.Drawing.Size(95, 44);
+            this.paintButton.Size = new System.Drawing.Size(113, 44);
             this.paintButton.TabIndex = 0;
-            this.paintButton.Text = "Paint";
+            this.paintButton.Text = "Вывести";
             this.paintButton.UseVisualStyleBackColor = true;
             this.paintButton.Click += new System.EventHandler(this.paintButton_Click);
             // 
@@ -72,7 +79,7 @@
             this.gapTextBox.Name = "gapTextBox";
             this.gapTextBox.Size = new System.Drawing.Size(64, 26);
             this.gapTextBox.TabIndex = 3;
-            this.gapTextBox.Text = "0,5";
+            this.gapTextBox.Text = "0,05";
             // 
             // gapLabel
             // 
@@ -88,17 +95,17 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(17, 63);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(39, 20);
+            this.label2.Size = new System.Drawing.Size(28, 20);
             this.label2.TabIndex = 5;
-            this.label2.Text = "|x| <";
+            this.label2.Text = "x : ";
             // 
-            // xAbsTextBox
+            // xFromTextBox
             // 
-            this.xAbsTextBox.Location = new System.Drawing.Point(62, 60);
-            this.xAbsTextBox.Name = "xAbsTextBox";
-            this.xAbsTextBox.Size = new System.Drawing.Size(64, 26);
-            this.xAbsTextBox.TabIndex = 6;
-            this.xAbsTextBox.Text = "50";
+            this.xFromTextBox.Location = new System.Drawing.Point(62, 60);
+            this.xFromTextBox.Name = "xFromTextBox";
+            this.xFromTextBox.Size = new System.Drawing.Size(64, 26);
+            this.xFromTextBox.TabIndex = 6;
+            this.xFromTextBox.Text = "-15";
             // 
             // label3
             // 
@@ -115,16 +122,83 @@
             this.scaleTextBox.Name = "scaleTextBox";
             this.scaleTextBox.Size = new System.Drawing.Size(64, 26);
             this.scaleTextBox.TabIndex = 8;
-            this.scaleTextBox.Text = "10";
+            this.scaleTextBox.Text = "35";
+            // 
+            // errorLabel
+            // 
+            this.errorLabel.AutoSize = true;
+            this.errorLabel.Location = new System.Drawing.Point(311, 29);
+            this.errorLabel.Name = "errorLabel";
+            this.errorLabel.Size = new System.Drawing.Size(0, 20);
+            this.errorLabel.TabIndex = 9;
+            // 
+            // xToTextBox
+            // 
+            this.xToTextBox.Location = new System.Drawing.Point(132, 60);
+            this.xToTextBox.Name = "xToTextBox";
+            this.xToTextBox.Size = new System.Drawing.Size(64, 26);
+            this.xToTextBox.TabIndex = 10;
+            this.xToTextBox.Text = "15";
+            // 
+            // yFromTextBox
+            // 
+            this.yFromTextBox.Location = new System.Drawing.Point(164, 192);
+            this.yFromTextBox.Name = "yFromTextBox";
+            this.yFromTextBox.Size = new System.Drawing.Size(64, 26);
+            this.yFromTextBox.TabIndex = 11;
+            this.yFromTextBox.Text = "2";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 192);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(113, 43);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "Вычислить";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // xValueTextBox
+            // 
+            this.xValueTextBox.Location = new System.Drawing.Point(164, 224);
+            this.xValueTextBox.Name = "xValueTextBox";
+            this.xValueTextBox.Size = new System.Drawing.Size(64, 26);
+            this.xValueTextBox.TabIndex = 13;
+            this.xValueTextBox.Text = "3";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(138, 198);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(25, 20);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "y=";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(138, 227);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(25, 20);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "x=";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1009, 530);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.xValueTextBox);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.yFromTextBox);
+            this.Controls.Add(this.xToTextBox);
+            this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.scaleTextBox);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.xAbsTextBox);
+            this.Controls.Add(this.xFromTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.gapLabel);
             this.Controls.Add(this.gapTextBox);
@@ -132,7 +206,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.paintButton);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Practice";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,9 +220,16 @@
         private System.Windows.Forms.TextBox gapTextBox;
         private System.Windows.Forms.Label gapLabel;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox xAbsTextBox;
+        private System.Windows.Forms.TextBox xFromTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox scaleTextBox;
+        private System.Windows.Forms.Label errorLabel;
+        private System.Windows.Forms.TextBox xToTextBox;
+        private System.Windows.Forms.TextBox yFromTextBox;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox xValueTextBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 

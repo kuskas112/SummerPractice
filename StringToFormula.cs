@@ -200,7 +200,7 @@ namespace SummerPractice
             }
 
             if (parenlevels > 0)
-                throw new ArgumentException("Mis-matched parentheses in expression");
+                throw new ArgumentException("Ошибка в расстановке скобок");
 
             return subExpr.ToString();
         }
@@ -246,6 +246,10 @@ namespace SummerPractice
                 else if (digits.IndexOf(c) >= 0)
                 {
                     sb.Append(c);
+                }
+                else
+                {
+                    throw new ArgumentException("Лишние символы в функции");
                 }
             }
 

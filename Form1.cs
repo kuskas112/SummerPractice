@@ -19,7 +19,8 @@ namespace SummerPractice
         Point center;
         int scale = 20;
         double gap = 0.5;
-        double xAbs = 0;
+        double xFrom = 0;
+        double xTo = 0;
         public Form1()
         {
             InitializeComponent();
@@ -42,6 +43,12 @@ namespace SummerPractice
 
                 g.DrawLine(pen, center.X + scale * i, center.Y, center.X + scale * (i+1), center.Y);
                 g.DrawLine(pen, center.X + scale * -i, center.Y, center.X + scale * (-i-1), center.Y);
+
+                if (i != 0)
+                {
+                    g.DrawLine(Pens.LightGray, center.X + scale * i, 0, center.X + scale * i, this.Height);
+                    g.DrawLine(Pens.LightGray, center.X + scale * -i, 0, center.X + scale * -i, this.Height);
+                }
             }
         }
 
@@ -62,6 +69,12 @@ namespace SummerPractice
 
                 g.DrawLine(pen, center.X, center.Y + scale * i, center.X, center.Y + scale * (i+1));
                 g.DrawLine(pen, center.X, center.Y + scale * -i, center.X, center.Y + scale * (-i-1));
+
+                if (i != 0)
+                {
+                    g.DrawLine(Pens.LightGray, 0, center.Y + scale * i, this.Width, center.Y + scale * i);
+                    g.DrawLine(Pens.LightGray, 0, center.Y + scale * -i, this.Width, center.Y + scale * -i);
+                }
             }
         }
 
@@ -69,10 +82,18 @@ namespace SummerPractice
         {
             List<Point> points = new List<Point>();
             string func = input.Text;
-            for (double x = -xAbs; x <= xAbs; x += gap)
+            try
             {
-                double result = calculatePoint(func, x);
-                points.Add(new Point(center.X + (int)(x * scale), center.Y - (int)(result * scale)));
+                for (double x = xFrom; x <= xTo; x += gap)
+                {
+                    double result = calculatePoint(func, x);
+                    points.Add(new Point(center.X + (int)(x * scale), center.Y - (int)(result * scale)));
+                }
+            }
+            catch (Exception e)
+            {
+                errorLabel.Text = e.Message;
+                return points;
             }
             return points;
         }
@@ -82,8 +103,8 @@ namespace SummerPractice
             string xValue = String.Format("{0:F10}", x);
             string expr = func.Replace("x", xValue);
             expr = expr.Replace(",", ".");
-            double res = StringToFormula.Eval(expr);
-
+            double res = 0;
+            res = StringToFormula.Eval(expr);          
             return res;
         }
 
@@ -134,7 +155,11 @@ namespace SummerPractice
             {
                 return false;
             }
-            if (!double.TryParse(xAbsTextBox.Text, out xAbs))
+            if (!double.TryParse(xFromTextBox.Text, out xFrom))
+            {
+                return false;
+            }
+            if (!double.TryParse(xToTextBox.Text, out xTo))
             {
                 return false;
             }
@@ -147,6 +172,7 @@ namespace SummerPractice
             g = CreateGraphics();
             g.Clear(DefaultBackColor);
             center = new Point(this.Width / 2, this.Height / 2);
+            errorLabel.Text = "";
             if (parseInput())
             {
                 drawXLine();
@@ -155,5 +181,18 @@ namespace SummerPractice
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            double x, y;
+            if (!double.TryParse(yFromTextBox.Text, out y))
+            {
+                return;
+            }
+            if (!double.TryParse(xValueTextBox.Text, out x))
+            {
+                return;
+            }
+            yFromTextBox.Text = calculatePoint(input.Text, x).ToString();
+        }
     }
 }
